@@ -27,10 +27,9 @@ jobs:
         shell: msys2 {0}
         run: |
           pacman -S --noconfirm base-devel
-          pacman -S --noconfirm gcc
-          pacman -S --noconfirm g++
-          pacman -S --noconfirm make
-          pacman -S --noconfirm cmake
+          pacman -S --noconfirm mingw-w64-x86_64-gcc
+          pacman -S --noconfirm mingw-w64-x86_64-binutils
+          pacman -S --noconfirm mingw-w64-x86_64-toolchain
           
       - name: Compile DLL
         shell: msys2 {0}
