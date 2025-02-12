@@ -1,0 +1,37 @@
+name: Build DLL with MinGW-w64
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:  # Manuelles Starten des Workflows
+
+jobs:
+  build:
+    runs-on: windows-latest  # Windows-Umgebung für MinGW-w64
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install MinGW-w64
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: mingw64
+          install: >-
+            mingw-w64-x86_64-gcc
+            mingw-w64-x86_64-g++
+            mingw-w64-x86_64-make
+
+      - name: Compile DLL
+        shell: msys2 {0}
+        run: |
+          g++ -shared -o my_dll.dll -DBUILD_DLL test/my_dll.cpp -Wl,--out-implib,my_dll.lib
+
+      - name: Upload DLL Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: my_dll
+          path: my_dll.dll
