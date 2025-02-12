@@ -21,9 +21,7 @@ jobs:
         with:
           msystem: mingw64
           install: >-
-            mingw-w64-x86_64-gcc
-            mingw-w64-x86_64-g++
-            mingw-w64-x86_64-make
+            pacman -S base-devel gcc g++ make cmake
 
       - name: Compile DLL
         shell: msys2 {0}
