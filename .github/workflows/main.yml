@@ -7,7 +7,7 @@ on:
   pull_request:
     branches:
       - main
-  workflow_dispatch:  # Manuelles Starten des Workflows
+  workflow_dispatch:
 
 jobs:
   build:
@@ -23,13 +23,18 @@ jobs:
           install: >-
             mingw-w64-x86_64-make
 
-      - name: Install Packages
+      - name: Install 64-Bit Packages
         shell: msys2 {0}
         run: |
           pacman -S --noconfirm base-devel
           pacman -S --noconfirm mingw-w64-x86_64-gcc
           pacman -S --noconfirm mingw-w64-x86_64-binutils
           pacman -S --noconfirm mingw-w64-x86_64-toolchain
+          pacman -S --noconfirm mingw-w64-x86_64-gdb
+          
+          gcc --version
+          g++ --version
+          gdb --version
           
       - name: Compile DLL
         shell: msys2 {0}
