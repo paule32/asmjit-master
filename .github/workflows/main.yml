@@ -40,7 +40,7 @@ jobs:
           git clone https://github.com/asmjit/asmjit.git
           cd asmjit/src/asmjit
           mkdir objs
-          cd ../x86
+          cd x86
           g++ -DASMJIT_BUILD_RELEASE -DASMJIT_DYNAMIC -DASMJIT_NO_AARCH64 -DASMJIT_ABI_VERSION=1.13 -I../ -m64 -std=c++20 -O2 -fPIC -shared -c *.cpp
           cp *.o ../objs
           cd ../core
