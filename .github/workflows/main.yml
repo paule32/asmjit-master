@@ -35,14 +35,26 @@ jobs:
           gcc --version
           g++ --version
           gdb --version
-          
-      - name: Compile DLL
-        shell: msys2 {0}
-        run: |
-          g++ -shared -o my_dll.dll -DBUILD_DLL test/my_dll.cpp -Wl,--out-implib,my_dll.lib
+
+          git clone https://github.com/asmjit/asmjit.git
+          cd asmjit/src/asmjit
+          mkdir objs
+          cd objs
+          rm *.o
+          cd ../x86
+          g++ -DASMJIT_BUILD_RELEASE -DASMJIT_DYNAMIC -DASMJIT_NO_AARCH64 -DASMJIT_ABI_VERSION=1.13 -I../ -m64 -std=c++20 -O2 -fPIC -shared -c *.cpp
+          cp *.o ../objs
+          cd ../core
+          g++ -DASMJIT_BUILD_RELEASE -DASMJIT_DYNAMIC -DASMJIT_NO_AARCH64 -DASMJIT_ABI_VERSION=1.13 -I../ -m64 -std=c++20 -O2 -fPIC -shared -c *.cpp
+          cp *.o ../objs
+          cd ../objs
+          ar -rcs libasmjit.a *.o
+          g++ -DASMJIT_BUILD_RELEASE -DASMJIT_DYNAMIC -DASMJIT_ABI_VERSION=1.13 -I../ -m64 -std=c++20 -O2 -fPIC -shared -o AsmJIT.DLL *.o
 
       - name: Upload DLL Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: my_dll
-          path: my_dll.dll
+          name: AsmJIT Library Artefacts
+          path: |
+            asmjit/src/asmjit/objs/AsmJIT.DLL
+            asmjit/src/asmjit/objs/libasmjit.a
